@@ -1,0 +1,147 @@
+<style>
+  body {
+    margin: 33px;
+    padding: 33px;
+  }
+
+  hr {
+    height: 1px;
+    color: black;
+    width: 400px;
+    left: text-align:left;
+    margin: 0 auto 0 0;
+  }
+
+  h2 {
+    margin: 5px;
+    margin-left: 0px;
+    clear: both;
+  }
+
+  #leaf_draw_1,
+  #leaf_draw_3 {
+    margin-left: 20px;
+    font-size: 22px;
+    width: 100%;
+    display: table;
+  }
+
+  #leaf_draw_2 {
+    margin-left: 20px;
+    width: 100%;
+    text-align: center;
+    display: table;
+  }
+
+  #result_text {
+    font-size: 66px;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+</style>
+<script>
+  window.onkeyup = keyup;
+
+  var inputTextValue;
+
+  function keyup(e) {
+
+    inputTextValue = e.target.value;
+
+    if (e.keyCode >= 1) {
+      runMSM();
+    }
+  }
+
+
+  function runMSM() {
+
+    var angle = document.getElementById("angle").value;
+    var cavity_width = document.getElementById("cavity").value;
+
+    var thickness_leaf_1 = document.getElementById("leaf1").value;
+    var thickness_leaf_2 = document.getElementById("leaf2").value;
+    var density_1 = document.getElementById("density1").value;
+    var density_2 = document.getElementById("density2").value;
+
+    var weight_1 = ((thickness_leaf_1 * density_1) / 1000);
+    var weight_2 = ((thickness_leaf_2 * density_2) / 1000);
+
+    var res_frequency = 60 / (Math.cos(angle * Math.PI / 180) * Math.sqrt(cavity_width / 1000)) * Math.sqrt(1 / weight_1 + 1 / weight_2);
+
+    document.getElementById('result_text').innerHTML = (Math.round((res_frequency * 1000) / 10) / 100).toFixed(2) + ' Hz';
+
+    drawLeafs(cavity_width, thickness_leaf_1, thickness_leaf_2);
+
+  }
+
+  function drawLeafs(spring, thickness_leaf_1, thickness_leaf_2) {
+    document.getElementById('leaf_draw_1').style = 'border:3px solid #000000; height:' + (thickness_leaf_1) + 'px;padding:10px;';
+    document.getElementById('leaf_draw_2').style = 'background-color: #EAC117; height:' + (spring) + 'px;padding:10px;';
+    document.getElementById('leaf_draw_3').style = 'border:3px solid #000000; height:' + (thickness_leaf_2) + 'px;padding:10px;';
+
+    document.getElementById('leaf_draw_1').style.borderColor = 'black';
+    document.getElementById('leaf_draw_1').style.borderWidth = 'thick';
+    document.getElementById('leaf_draw_2').style.backgroundColor = '#EAC117';
+    document.getElementById('leaf_draw_3').style.borderColor = '#000000';
+    document.getElementById('leaf_draw_3').style.borderWidth = 'thick';
+  }
+
+</script>
+</head>
+
+<body>
+  <form name="MSM">Cavity width:
+    <input type="text" id="cavity" value="" size="5" /> <sup>mm</sup> Angle of incidence:
+    <input type="text" id="angle" value="25" size="3" />&deg;
+    <br>
+
+    <h2>Leaf 1</h2>
+
+    <hr>Thickness:
+    <br>
+    <input type="text" id="leaf1" value="" size="5" /><sup> mm</sup>
+
+    <br>Density:
+    <br>
+    <input type="text" id="density1" value="" size="5" /><sup> kg/m3</sup>
+
+    <br>
+
+    <h2>Leaf 2 </h2>
+
+    <hr>Thickness:
+    <br>
+    <input type="text" id="leaf2" value="" size="5" /><sup> mm</sup>
+
+    <br>Density:
+    <br>
+    <input type="text" id="density2" value="" size="5"><sup> kg/m3</sup>
+
+    <br>
+    <br>
+    <input type="button" onclick="javascript:runMSM();" value="Calculate MSM resonance" />
+    <br>
+    <br>
+
+    <h2>Result mass-spring resonance:</h2>
+    <br>
+    <br>
+    <center>
+      <div id="leaf_draw_1">Leaf 1</div>
+      <div id="leaf_draw_2">
+        <div id="result_text"></div>
+      </div>
+      <div id="leaf_draw_3">Leaf 2</div>
+    </center>
+    <br>
+  </form>
+  <hr>
+  <small>Based on Eric Desart's MSMresonance03.xls file.
+
+</small>
+
+</body>
+
+</html>
